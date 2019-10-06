@@ -4,11 +4,9 @@ using UnityEngine;
 
 public class ContinueButtonHandler : MonoBehaviour
 {
-    [SerializeField] TimeManager timeManager;
-
     public void OnClick()
     {
-        timeManager.ReturnDefault();
+        TimeManager.Instance.ReturnDefault();
         GameManager.Instance.LoadLevel();
         UIController.Instance.ShowPlay();
     }

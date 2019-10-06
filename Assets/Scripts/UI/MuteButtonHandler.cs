@@ -6,11 +6,15 @@ using UnityEngine.UI;
 public class MuteButtonHandler : MonoBehaviour
 {
     Image img;
-    bool isClicked = true;
+    bool isClicked = false;
 
     void Awake()
     {
         img = GetComponent<Image>();
+    }
+
+    private void Start() {
+        AudioManager.Instance.ToggleMute(false);
     }
 
 

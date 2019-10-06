@@ -6,11 +6,13 @@ using TapticPlugin;
 
 public class GameManager : MonoBehaviour
 {
+    public const string LEVEL = "currentLevel";
+    bool firstLoad = false;
     [SerializeField] Player player;
     [SerializeField] TimeManager timeManager;
     Rigidbody playerRigidbody;
-    private static GameManager instance;
     public static int ActiveLevel = -1;
+    private static GameManager instance;
 
     public static GameManager Instance
     {
@@ -40,16 +42,21 @@ public class GameManager : MonoBehaviour
     {
         player.isActive = false;
         playerRigidbody.isKinematic = true;
+        ActiveLevel = PlayerPrefs.GetInt(LEVEL) - 1;
+        firstLoad = true;
     }
 
     public void LoadLevel()
     {
-        if (ActiveLevel > -1)
+        if (!firstLoad)
         {
             SceneManager.UnloadSceneAsync(SceneConstants.Levels[ActiveLevel].Id);
         }
         ActiveLevel = Mathf.Min(ActiveLevel + 1, SceneConstants.Levels.Length - 1);
+        Debug.Log(ActiveLevel);
         SceneManager.LoadScene(SceneConstants.Levels[ActiveLevel].Id, LoadSceneMode.Additive);
+        PlayerPrefs.SetInt(LEVEL, ActiveLevel);
+        firstLoad = false;
 
         float delayTime = 0.2f;
         playerRigidbody.velocity = Vector3.zero;
@@ -65,6 +72,10 @@ public class GameManager : MonoBehaviour
         playerRigidbody.isKinematic = false;
         player.isActive = true;
         TapticManager.Impact(ImpactFeedback.Medium);
+        if (ActiveLevel == 0) {
+            UIController.Instance.ShowTutorial();
+            yield return new WaitForSeconds(2f);
+        }
         UIController.Instance.ShowPlay();
     }
 
@@ -80,7 +91,10 @@ public class GameManager : MonoBehaviour
 
     void Win()
     {
-        TapticManager.Impact(ImpactFeedback.Medium);
+        for (int i = 0; i < 3; i++)
+        {
+            TapticManager.Impact(ImpactFeedback.Medium);
+        }
         BallFactory.Instance.Stop();
         UIController.Instance.ShowWin();
         player.isActive = false;

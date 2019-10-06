@@ -7,6 +7,7 @@ public class UIController : MonoBehaviour
     [SerializeField] GameObject WinPanel;
     [SerializeField] GameObject PlayPanel;
     [SerializeField] GameObject StartPanel;
+    [SerializeField] GameObject TutorialPanel;
     [SerializeField] ParticleSystem particles;
     [SerializeField] Image progressBar;
 
@@ -37,7 +38,7 @@ public class UIController : MonoBehaviour
     }
 
     void EnablePanel(GameObject panel) {
-        GameObject[] menuPanels = { WinPanel, PlayPanel, StartPanel };
+        GameObject[] menuPanels = { WinPanel, PlayPanel, StartPanel, TutorialPanel };
         foreach (var menuPanel in menuPanels)
         {
             menuPanel.SetActive(false);
@@ -53,6 +54,11 @@ public class UIController : MonoBehaviour
     public void ShowPlay()
     {
         EnablePanel(PlayPanel);
+    }
+
+    public void ShowTutorial()
+    {
+        EnablePanel(TutorialPanel);
     }
 
     public void ShowWin()
